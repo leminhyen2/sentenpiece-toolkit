@@ -1,18 +1,22 @@
 
-def writeListOfSPMvocabsToFile(spmModelFilePath, outputFileName):
+def writeListOfSPMvocabsToFile(spmModelFilePath, outputFileName="SPMvocabs.txt"):
 
-    import sentencepiece as spm
+    import sentencepiece.sentencepiece_model_pb2 as model
 
-    nameOfModelFile = spmModelFilePath
-    spmModel = spm.SentencePieceProcessor(model_file= nameOfModelFile)
+    m = model.ModelProto()
+    m.ParseFromString(open(spmModelFilePath, "rb").read())
 
-    listOfSPMvocabs = [spmModel.id_to_piece(id) for id in range(spmModel.get_piece_size())]
+    listOfVocabs = []
+    for i, vocab in enumerate(m.pieces):
+        vocabContent = vocab.piece
+        vocabScore = vocab.score
+        listOfVocabs.append(f"{vocabContent}    {vocabScore}")
 
     def printListToTextFile(listToPrint, name):
         print(*listToPrint, sep='\n', file=open(name, "w", encoding="utf8"))
         return "print list to txt file"
 
-    printListToTextFile(listOfSPMvocabs, outputFileName)
+    printListToTextFile(listOfVocabs, outputFileName)
 
 
-# Example: writeListOfSPMvocabsToFile('spm.en.nopretok.model', "englishVocab.txt")
+# writeListOfSPMvocabsToFile('spm.ja.nopretok.model', "englishVocab.txt")
