@@ -1,6 +1,7 @@
-import sentencepiece.sentencepiece_model_pb2 as model
 
 def checkIfVocabInModel(vocabToCheck, modelFilePath):
+    import sentencepiece.sentencepiece_model_pb2 as model
+
     m = model.ModelProto()
     m.ParseFromString(open(modelFilePath, "rb").read())
 
